@@ -57,3 +57,7 @@ kafka-system-control/
    This script checks for Java, sets up configuration templates, and builds the Java components if Maven is available.
 
 3. **Configure your environments**
+   Edit the configuration files in config/ (or use the provided templates) to set the correct bootstrap servers and security properties for DEV, PREPROD, and PROD.
+
+4. **Make sure Kafka binaries are accessible**
+   Either download Kafka and place it in kafka-bin/, or ensure the standard scripts (kafka-topics.sh, etc.) are in your PATH.
