@@ -31,3 +31,21 @@ kafka-system-control/
 ├── kafka-bin/ # (Optional) Apache Kafka binaries
 ├── logs/ # Operation logs (excluded from version control)
 └── examples/ # Usage examples
+
+---
+
+## 📋 Prerequisites
+
+- **Linux** (developed and tested on RHEL / Ubuntu)
+- **Bash 4+**
+- **Java 11+** (required for Java‑based features)
+- **Apache Kafka binaries** (either placed in `kafka-bin/` or available in `$PATH`)
+
+---
+
+## 🚀 Installation
+
+1. **Clone the repository**  
+   ```bash
+   git clone https://github.com/yourusername/kafka-system-control.git
+   cd kafka-system-control
