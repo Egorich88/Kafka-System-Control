@@ -50,3 +50,10 @@ kafka-system-control/
    ```bash
    git clone https://github.com/Egorich88/kafka-system-control.git
    cd kafka-system-control
+   
+2. **Run the installation helper**
+   ```bash
+   ./bin/install-deps.sh
+   This script checks for Java, sets up configuration templates, and builds the Java components if Maven is available.
+
+3. **Configure your environments**
