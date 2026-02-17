@@ -47,5 +47,5 @@ kafka-system-control/
 
 1. **Clone the repository**  
    ```bash
-   git clone https://github.com/yourusername/kafka-system-control.git
+   git clone https://github.com/Egorich88/kafka-system-control.git
    cd kafka-system-control
