@@ -1,17 +1,22 @@
 # Kafka System Control 🎯
 
-**Версия 3.0** | Разработано  (2023-2026)
+**Version 2.0** | Developed (2023–2026)
 
-Комплексная система управления Apache Kafka с bash-интерфейсом и Java-утилитами.
+A comprehensive Apache Kafka management system with a user‑friendly Bash interface and powerful Java utilities.  
+Designed to simplify daily operations across multiple environments (DEV, PREPROD, PROD) while ensuring safety and auditability.
 
-## 🚀 Возможности
+---
 
-- 📋 **Просмотр** (describe) - топики, группы, ACL, конфигурации
-- ➕ **Создание** (create) - топики, группы, права доступа
-- 🗑️ **Удаление** (delete) - безопасное удаление с подтверждением
-- 🔍 **Поиск сообщений** - по оффсету, ключу, временному диапазону
-- 📊 **Мониторинг** - анализ lag, метрики производительности
-- 🛡️ **Безопасность** - поддержка разных окружений (DEV/PREPROD/PROD)
+## ✨ Features
 
-## 🏗️ Структура проекта
+- **📋 Describe** – View details of topics, consumer groups, ACLs, and configurations.
+- **➕ Create** – Safely create topics, consumer groups, and access rules.
+- **🗑️ Delete** – Secure deletion with confirmation prompts and environment‑aware safeguards.
+- **🔍 Message Search** – Locate messages by offset, key, or time range (Java‑powered).
+- **📊 Monitoring** – Analyze consumer lag, collect metrics, and simulate rebalances.
+- **🛡️ Multi‑Environment** – Switch between DEV, PREPROD, and PROD with isolated configurations.
+- **⚙️ Extensible** – Modular design makes it easy to add new commands and integrations.
 
+---
+
+## 📁 Project Structure
