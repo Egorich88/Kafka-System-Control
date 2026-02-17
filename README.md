@@ -24,8 +24,9 @@ Designed to simplify daily operations across multiple environments (DEV, PREPROD
 
 kafka-system-control/
 
-├── bin/ # Launch scripts and installers
-├── scripts/ # Core Bash modules (main menu, libs, sub‑modules)
+├── bin/ # Launch scripts and installers 
+├── scripts/ # Core Bash modules (main menu, libs, sub‑modules) 
+
 ├── java/ # Java utilities (advanced search, metrics, etc.)
 ├── config/ # Environment‑specific configuration templates
 
