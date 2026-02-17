@@ -1,5 +1,6 @@
 # Kafka System Control 
 <img width="318" height="159" alt="images" src="https://github.com/user-attachments/assets/ae5d80ff-5b04-445c-8465-a56c35c5c727" />
+
 **Version 3.0** | Developed (2023–2026)
 
 A comprehensive Apache Kafka management system with a user‑friendly Bash interface and powerful Java utilities.  
