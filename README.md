@@ -25,21 +25,13 @@ Designed to simplify daily operations across multiple environments (DEV, PREPROD
 kafka-system-control/
 
 ├── bin/ # Launch scripts and installers
-
 ├── scripts/ # Core Bash modules (main menu, libs, sub‑modules)
-
 ├── java/ # Java utilities (advanced search, metrics, etc.)
-
 ├── config/ # Environment‑specific configuration templates
-
 ├── docs/ # User and developer documentation
-
 ├── tools/ # Helper scripts (backup, migration, benchmarking)
-
 ├── kafka-bin/ # (Optional) Apache Kafka binaries
-
 ├── logs/ # Operation logs (excluded from version control)
-
 └── examples/ # Usage examples
 
 ---
