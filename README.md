@@ -1,10 +1,27 @@
 # Kafka System Control 🎯
-<img width="344" height="310" alt="image" src="https://github.com/user-attachments/assets/0d3489da-be32-4501-9607-27c5ae0700e1" />
+<img width="344" height="341" alt="image" src="https://github.com/user-attachments/assets/2ad18992-4094-4be3-8c97-aae58739859b" />
 
 **Версия 3.0** | Разработано Egorich88 (2023–2026)
 
 Комплексная система управления Apache Kafka с удобным интерфейсом командной строки на Bash.  
 Проект позволяет выполнять основные операции с Kafka (просмотр, создание, удаление) через интуитивно понятное меню, автоматизирует рутинные действия и минимизирует риск ошибок благодаря подтверждениям в опасных операциях.
+
+---
+
+## Главное меню
+<img width="328" height="243" alt="image" src="https://github.com/user-attachments/assets/2274bae4-cd2c-4d98-80e6-a9d74f1ebadc" />
+
+## Меню Описание (describe)
+<img width="354" height="254" alt="image" src="https://github.com/user-attachments/assets/89db8ef0-2283-471b-9bf3-fba8665e8193" />
+
+## Меню Создание (create)
+<img width="349" height="250" alt="image" src="https://github.com/user-attachments/assets/46ffe98b-9b3f-497c-827c-053fca6f55b4" />
+
+## Создаем топик:
+<img width="957" height="454" alt="image" src="https://github.com/user-attachments/assets/a1d73658-c259-4bc6-8a22-369cca89f23c" />
+
+## Меню Удаление (delete)
+Находится в разработке
 
 ---
 
