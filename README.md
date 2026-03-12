@@ -1,6 +1,5 @@
 # Kafka System Control 
-<img width="341" height="373" alt="image" src="https://github.com/user-attachments/assets/7f884ee0-2638-4ba3-9d11-a1ec54ed7299" />
-
+<img width="344" height="310" alt="image" src="https://github.com/user-attachments/assets/0d3489da-be32-4501-9607-27c5ae0700e1" />
 
 **Version 3.0** | Developed (2023–2026)
 
