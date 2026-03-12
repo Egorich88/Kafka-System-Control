@@ -1,11 +1,13 @@
 # Kafka System Control
-
-<img width="344" height="341" alt="image" src="https://github.com/user-attachments/assets/2ad18992-4094-4be3-8c97-aae58739859b" />
+![logo_kafka_System_control](https://github.com/user-attachments/assets/e0d40490-4f4a-4535-963c-860b0e766e76)
 
 **Версия 3.0** | Разработано Egorich88 (2023–2026)
 
 Комплексная система управления Apache Kafka с удобным интерфейсом командной строки на Bash.  
 Проект позволяет выполнять основные операции с Kafka (просмотр, создание, удаление) через интуитивно понятное меню, автоматизирует рутинные действия и минимизирует риск ошибок благодаря подтверждениям в опасных операциях.
+
+---
+<img width="344" height="341" alt="image" src="https://github.com/user-attachments/assets/2ad18992-4094-4be3-8c97-aae58739859b" />
 
 ---
 
