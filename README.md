@@ -23,23 +23,8 @@
 
 ## 📁 Структура проекта
 
-kafka-system-control/
-├── bin/ # Исполняемые файлы
-│ └── kafka-control # Главный скрипт запуска
-├── scripts/
-│ ├── lib/ # Общие библиотеки
-│ │ ├── config.sh # Конфигурация (путь к Kafka, bootstrap)
-│ │ ├── ui.sh # Цвета и функции интерфейса
-│ │ ├── kafka_commands.sh # Обёртка для команд Kafka
-│ │ └── utils.sh # Логирование и вспомогательные функции
-│ └── modules/ # Модули команд
-│ ├── describe.sh # Просмотр информации
-│ ├── create.sh # Создание ресурсов
-│ └── delete.sh # Удаление (заглушка)
-├── config/
-│ └── client.properties # Параметры подключения к Kafka
-├── logs/ # Директория для логов
-└── README.md # Документация
+<img width="474" height="477" alt="image" src="https://github.com/user-attachments/assets/22a1169a-50a2-49a1-ab33-c02a338c512c" />
+
 
 ---
 
