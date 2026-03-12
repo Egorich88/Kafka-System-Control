@@ -7,7 +7,7 @@
 Проект позволяет выполнять основные операции с Kafka (просмотр, создание, удаление) через интуитивно понятное меню, автоматизирует рутинные действия и минимизирует риск ошибок благодаря подтверждениям в опасных операциях.
 
 ---
-<img width="344" height="341" alt="image" src="https://github.com/user-attachments/assets/2ad18992-4094-4be3-8c97-aae58739859b" />
+<img width="343" height="345" alt="image" src="https://github.com/user-attachments/assets/b19b373e-04b4-4dd9-9466-039428efba7a" />
 
 ---
 
