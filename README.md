@@ -143,6 +143,15 @@
 
 *   [ ] Интеграция с Prometheus/Grafana
 
+### 🤝 Как помочь проекту
+*   Поставьте звезду на GitHub.
+*   Предложите улучшения через Issues или Pull Requests.
+*   Сообщите об ошибках.
+
+---
+
+**© 2026 | Kafka System Control [Egorich88](https://github.com/Egorich88)** 🇷🇺
+
 
 
 
