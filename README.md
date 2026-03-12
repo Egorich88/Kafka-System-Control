@@ -1,4 +1,5 @@
-# Kafka System Control 🎯
+# Kafka System Control
+
 <img width="344" height="341" alt="image" src="https://github.com/user-attachments/assets/2ad18992-4094-4be3-8c97-aae58739859b" />
 
 **Версия 3.0** | Разработано Egorich88 (2023–2026)
