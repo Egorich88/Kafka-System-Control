@@ -1,64 +1,148 @@
-# Kafka System Control 
+# Kafka System Control 🎯
 <img width="344" height="310" alt="image" src="https://github.com/user-attachments/assets/0d3489da-be32-4501-9607-27c5ae0700e1" />
+**Версия 3.0** | Разработано Егором Хоменко (2023–2026)
 
-**Version 3.0** | Developed (2023–2026)
-
-A comprehensive Apache Kafka management system with a user‑friendly Bash interface and powerful Java utilities.  
-Designed to simplify daily operations across multiple environments (DEV, PREPROD, PROD) while ensuring safety and auditability.
-
----
-
-## ✨ Features
-
-- **📋 Describe** – View details of topics, consumer groups, ACLs, and configurations.
-- **➕ Create** – Safely create topics, consumer groups, and access rules.
-- **🗑️ Delete** – Secure deletion with confirmation prompts and environment‑aware safeguards.
-- **🔍 Message Search** – Locate messages by offset, key, or time range (Java‑powered).
-- **📊 Monitoring** – Analyze consumer lag, collect metrics, and simulate rebalances.
-- **🛡️ Multi‑Environment** – Switch between DEV, PREPROD, and PROD with isolated configurations.
-- **⚙️ Extensible** – Modular design makes it easy to add new commands and integrations.
+Комплексная система управления Apache Kafka с удобным интерфейсом командной строки на Bash.  
+Проект позволяет выполнять основные операции с Kafka (просмотр, создание, удаление) через интуитивно понятное меню, автоматизирует рутинные действия и минимизирует риск ошибок благодаря подтверждениям в опасных операциях.
 
 ---
 
-## 📁 Project Structure
+## ✨ Возможности
+
+- 📋 **Просмотр (describe)** – информация о топиках, группах потребителей, ACL и конфигурациях.
+- ➕ **Создание (create)** – создание топиков, ACL (с интерактивным вводом параметров).
+- 🗑️ **Удаление (delete)** – модуль в разработке (заглушка).
+- 🔐 **ACL** – полноценное управление списками доступа (добавление правил Allow/Deny, выбор ресурсов, операций).
+- 🖥️ **Удобный интерфейс** – цветное меню, понятные подсказки, подтверждения действий.
+- 📁 **Модульная архитектура** – легко добавлять новые команды и расширять функциональность.
+- 📝 **Логирование** – все операции записываются в лог-файл для аудита.
+- 🐧 **Поддержка WSL и Linux** – проект разработан и протестирован в среде WSL (Ubuntu) с локальной Kafka.
+
+---
+
+## 📁 Структура проекта
 
 kafka-system-control/
-├── bin/ # Launch scripts and installers
-├── scripts/ # Core Bash modules (main menu, libs, sub‑modules)
-├── java/ # Java utilities (advanced search, metrics, etc.)
-├── config/ # Environment‑specific configuration templates
-├── docs/ # User and developer documentation
-├── tools/ # Helper scripts (backup, migration, benchmarking)
-├── kafka-bin/ # (Optional) Apache Kafka binaries
-├── logs/ # Operation logs (excluded from version control)
-└── examples/ # Usage examples
-<img width="586" height="355" alt="image" src="https://github.com/user-attachments/assets/532ee963-ece2-404c-8657-1ace3ce54e98" />
+├── bin/ # Исполняемые файлы
+│ └── kafka-control # Главный скрипт запуска
+├── scripts/
+│ ├── lib/ # Общие библиотеки
+│ │ ├── config.sh # Конфигурация (путь к Kafka, bootstrap)
+│ │ ├── ui.sh # Цвета и функции интерфейса
+│ │ ├── kafka_commands.sh # Обёртка для команд Kafka
+│ │ └── utils.sh # Логирование и вспомогательные функции
+│ └── modules/ # Модули команд
+│ ├── describe.sh # Просмотр информации
+│ ├── create.sh # Создание ресурсов
+│ └── delete.sh # Удаление (заглушка)
+├── config/
+│ └── client.properties # Параметры подключения к Kafka
+├── logs/ # Директория для логов
+└── README.md # Документация
 
 ---
 
-## 📋 Prerequisites
+## ⚙️ Установка и настройка
 
-- **Linux** (developed and tested on RHEL / Ubuntu)
+### Требования
+- **Linux** или **WSL** (рекомендуется Ubuntu)
+- **Apache Kafka** (установленная и настроенная, например, в `~/kafka`)
+- **Java 11+** (для работы Kafka)
 - **Bash 4+**
-- **Java 11+** (required for Java‑based features)
-- **Apache Kafka binaries** (either placed in `kafka-bin/` or available in `$PATH`)
 
----
-
-## 🚀 Installation
-
-1. **Clone the repository**  
+### Шаги
+1. **Клонируйте репозиторий** (или скопируйте файлы вручную):
    ```bash
-   git clone https://github.com/Egorich88/kafka-system-control.git
+   git clone https://github.com/yourname/kafka-system-control.git
    cd kafka-system-control
-   
-2. **Run the installation helper**
-   ```bash
-   ./bin/install-deps.sh
-   This script checks for Java, sets up configuration templates, and builds the Java components if Maven is available.
 
-3. **Configure your environments**
-   Edit the configuration files in config/ (or use the provided templates) to set the correct bootstrap servers and security properties for DEV, PREPROD, and PROD.
+2. **Настройте конфигурацию** в scripts/lib/config.sh:
+   export KAFKA_HOME="/home/ваш_пользователь/kafka"   # путь к директории Kafka
+   export BOOTSTRAP_SERVERS="localhost:9092"           # адрес брокера
 
-4. **Make sure Kafka binaries are accessible**
-   Either download Kafka and place it in kafka-bin/, or ensure the standard scripts (kafka-topics.sh, etc.) are in your PATH.
+3. **Убедитесь, что Kafka запущена** (ZooKeeper + брокер):
+   jps   # должны быть QuorumPeerMain и Kafka
+
+4. **Запустите проект:**
+   ./bin/kafka-control
+
+🚀 Использование
+После запуска отображается главное меню с пунктами:
+1) 📋 Описание (describe)
+2) ➕ Создание (create)
+3) 🗑️ Удаление (delete)
+4) 🚪 Выход
+
+📋 Описание (describe)
+Внутри модуля доступны подменю:
+
+Топики – поиск, конфигурация, список.
+
+Группы потребителей – поиск, список, состояние всех групп.
+
+ACL – просмотр прав на топик или полного списка.
+
+➕ Создание (create)
+Топик – интерактивное создание с указанием партиций, фактора репликации и дополнительных конфигураций.
+
+ACL – гибкое создание правил доступа:
+
+Тип разрешения (Allow/Deny)
+
+Principal (например, User:alice)
+
+Хост (IP или *)
+
+Тип ресурса (Topic, Group, Cluster, TransactionalId, DelegationToken)
+
+Операции (Read, Write, Create, Delete, Alter, Describe, ClusterAction, All)
+
+Группа потребителей – пока информационная заглушка.
+
+🗑️ Удаление (delete)
+Модуль находится в разработке.
+
+🔧 Расширение функциональности
+Проект построен модульно. Чтобы добавить новую команду:
+
+Создайте файл модуля в scripts/modules/.
+
+Используйте общие библиотеки (lib/*.sh).
+
+Добавьте вызов модуля в main_menu.sh.
+
+📌 Примечания
+Если вы не настраивали авторизацию в Kafka, команды ACL будут сохраняться в ZooKeeper, но не применяться. Для включения авторизации см. документацию Kafka.
+
+Все действия логируются в файл logs/kafka_operations.log.
+
+🤝 Автор Egorich88
+Проект создан в 2023–2026 годах для автоматизации работы с Kafka.
+«Movement – life!»
+
+📄 Лицензия
+Проект распространяется под лицензией MIT. Подробнее в файле LICENSE.
+
+📈 Планы развития
+Модуль описания (describe)
+
+Модуль создания (create) с поддержкой ACL
+
+Модуль удаления (delete)
+
+Java-утилиты для расширенного поиска сообщений
+
+Веб-интерфейс (React + Go)
+
+Поддержка нескольких окружений (DEV, PREPROD, PROD)
+
+Интеграция с Prometheus/Grafana
+
+
+
+
+
+
+
+
+
