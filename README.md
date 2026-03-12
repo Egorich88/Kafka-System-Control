@@ -43,13 +43,16 @@
    cd kafka-system-control
 
 2. **Настройте конфигурацию** в scripts/lib/config.sh:
+   ```bash
    export KAFKA_HOME="/home/ваш_пользователь/kafka"   # путь к директории Kafka
    export BOOTSTRAP_SERVERS="localhost:9092"           # адрес брокера
 
-3. **Убедитесь, что Kafka запущена** (ZooKeeper + брокер):
+4. **Убедитесь, что Kafka запущена** (ZooKeeper + брокер):
+   ```bash
    jps   # должны быть QuorumPeerMain и Kafka
 
-4. **Запустите проект:**
+6. **Запустите проект:**
+   ```bash
    ./bin/kafka-control
 
 ---
