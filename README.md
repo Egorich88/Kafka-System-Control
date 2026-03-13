@@ -11,23 +11,6 @@
 
 ---
 
-## Главное меню
-<img width="328" height="243" alt="image" src="https://github.com/user-attachments/assets/2274bae4-cd2c-4d98-80e6-a9d74f1ebadc" />
-
-## Меню Описание (describe)
-<img width="354" height="254" alt="image" src="https://github.com/user-attachments/assets/89db8ef0-2283-471b-9bf3-fba8665e8193" />
-
-## Меню Создание (create)
-<img width="349" height="250" alt="image" src="https://github.com/user-attachments/assets/46ffe98b-9b3f-497c-827c-053fca6f55b4" />
-
-## Создаем топик:
-<img width="957" height="454" alt="image" src="https://github.com/user-attachments/assets/a1d73658-c259-4bc6-8a22-369cca89f23c" />
-
-## Меню Удаление (delete)
-Находится в разработке
-
----
-
 ## ✨ Возможности
 
 - 📋 **Просмотр (describe)** – информация о топиках, группах потребителей, ACL и конфигурациях.
@@ -44,7 +27,6 @@
 ## 📁 Структура проекта
 
 <img width="474" height="477" alt="image" src="https://github.com/user-attachments/assets/22a1169a-50a2-49a1-ab33-c02a338c512c" />
-
 
 ---
 
@@ -73,7 +55,7 @@
 
 6. **Запустите проект:**
    ```bash
-   ./bin/kafka-control
+   ./main_menu.sh
 
 ---
 
@@ -83,6 +65,7 @@
    2) ➕ Создание (create)
    3) 🗑️ Удаление (delete)
    4) 🚪 Выход
+<img width="331" height="248" alt="image" src="https://github.com/user-attachments/assets/09208c13-c378-4c48-b689-34b1ac6b5138" />
 
 ---
 
@@ -94,6 +77,7 @@
 - Группы потребителей – поиск, список, состояние всех групп.
 
 - ACL – просмотр прав на топик или полного списка.
+<img width="353" height="259" alt="image" src="https://github.com/user-attachments/assets/787b964e-386d-4dad-9417-8c1569651217" />
 
 ---
 
@@ -113,6 +97,8 @@
    - Операции (Read, Write, Create, Delete, Alter, Describe, ClusterAction, All)
 
 - Группа потребителей – пока информационная заглушка.
+<img width="346" height="249" alt="image" src="https://github.com/user-attachments/assets/f0e09abc-0a7e-4970-affa-89f637d755e6" />
+<img width="947" height="468" alt="image" src="https://github.com/user-attachments/assets/55866b02-fc3b-4c5e-9164-2e576ae044a3" />
 
 ---
 
