@@ -27,7 +27,7 @@
 ## 📁 Структура проекта
 
 <img width="474" height="477" alt="image" src="https://github.com/user-attachments/assets/22a1169a-50a2-49a1-ab33-c02a338c512c" />
-
+![img.png](img.png)
 ---
 
 ## ⚙️ Установка и настройка
