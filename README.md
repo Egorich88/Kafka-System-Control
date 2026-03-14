@@ -38,7 +38,8 @@
 ### Шаги
 1. **Клонируйте репозиторий** (или скопируйте файлы вручную):
    ```bash
-   git clone https://github.com/yourname/kafka-system-control.git
+   HTTPS: git clone https://github.com/Egorich88/kafka-system-control.git
+   SSH: git@github.com:Egorich88/Kafka-System-Control.git
    cd kafka-system-control
 
 2. **Настройте конфигурацию** в scripts/lib/config.sh:
