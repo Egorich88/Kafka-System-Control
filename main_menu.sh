@@ -1,73 +1,137 @@
 #!/bin/bash
 
+# Kafka System Control - Главное меню (версия Dendy)
+# Версия 3.0 | Егор Хоменко (Egorich88)
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/scripts/lib/config.sh"
 source "${SCRIPT_DIR}/scripts/lib/ui.sh"
 source "${SCRIPT_DIR}/scripts/lib/utils.sh"
 
-show_splash() {
-    tput clear
+# Отключаем курсор для чистоты интерфейса
+tput civis
+
+# Функция восстановления курсора при выходе
+restore_cursor() {
+    tput cnorm
+    exit 0
+}
+trap restore_cursor EXIT INT TERM
+
+# ASCII-арт в стиле NES (Mario-подобный)
+draw_logo() {
     echo "${CYAN}${BOLD}"
-    echo "  _  __      __ _ "
-    echo " | |/ /__ _ / _| | ____ _"
-    echo " | ' // _' | |_| |/ / _' |"
-    echo " | . \ (_| |  _|   < (_| |"
-    echo " |_|\_\__,_|_| |_|\_\__,_|"
-    echo "  ____            _ "
-    echo " / ___| _   _ ___| |_ ___ _ __ ___ "
-    echo " \___ \| | | / __| __/ _ \ '_ ' _ \ "
-    echo "  ___) | |_| \__ \ ||  __/ | | | | |"
-    echo " |____/ \__, |___/\__\___|_| |_| |_|"
-    echo "        |___/                       "
-    echo "   ____            _             _ "
-    echo "  / ___|___  _ __ | |_ _ __ ___ | |"
-    echo " | |   / _ \| '_ \| __| '__/ _ \| |"
-    echo " | |__| (_) | | | | |_| | | (_) | |"
-    echo "  \____\___/|_| |_|\__|_|  \___/|_|"
-    echo "" 
-    echo "  :: ${YELLOW}Egorich88${RESET} :: версия ${VERSION}"
-    echo ""
-    sleep 2
+    echo "   ╔═════════════════════════════════════════════════════════╗"
+    echo "   ║  ██╗  ██╗ █████╗ ███████╗██╗  ██╗ █████╗                ║"
+    echo "   ║  ██║ ██╔╝██╔══██╗██╔════╝██║ ██╔╝██╔══██╗               ║"
+    echo "   ║  █████╔╝ ███████║█████╗  █████╔╝ ███████║               ║"
+    echo "   ║  ██╔═██╗ ██╔══██║██╔══╝  ██╔═██╗ ██╔══██║               ║"
+    echo "   ║  ██║  ██╗██║  ██║██║     ██║  ██╗██║  ██║               ║"
+    echo "   ║  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝               ║"
+    echo "   ║  ╔═══════════════════════════════════════════════════╗  ║"
+    echo "   ║  ║           S Y S T E M   C O N T R O L             ║  ║"
+    echo "   ║  ╚═══════════════════════════════════════════════════╝  ║"
+    echo "   ║                  версия ${VERSION}                      ║"
+    echo "   ╚═════════════════════════════════════════════════════════╝"
+    echo "${RESET}"
 }
 
-main_menu() {
-    while true; do
-        draw_header "ГЛАВНОЕ МЕНЮ" "О С Н О В Н О Е  М Е Н Ю" 12 5 14
-        PS3="$(print_prompt 'Выберите действие [1-4]') "
-        options=(
-            "📋 Описание (describe)"
-            "➕ Создание (create)"
-            "🗑️ Удаление (delete)"
-            "🚪 Выход"
-        )
-        select opt in "${options[@]}"; do
-            case $opt in
-                "📋 Описание (describe)")
-                    "${SCRIPT_DIR}/scripts/modules/describe.sh"
-                    break
-                    ;;
-                "➕ Создание (create)")
-                    "${SCRIPT_DIR}/scripts/modules/create.sh"
-                    break
-                    ;;
-                "🗑️ Удаление (delete)")
-                    "${SCRIPT_DIR}/scripts/modules/delete.sh"
-                    break
-                    ;;
-                "🚪 Выход")
-                    clear
-                    echo "${GREEN}До свидания!${RESET}"
-                    exit 0
-                    ;;
-                *)
-                    echo "$(print_error 'Недействительный вариант') $REPLY"
-                    sleep 1
-                    break
-                    ;;
-            esac
-        done
+# Массив пунктов меню
+MENU_ITEMS=(
+    "📋 Описание (describe)"
+    "➕ Создание (create)"
+    "🗑️ Удаление (delete)"
+    "🚪 Выход"
+)
+
+# Соответствующие команды (скрипты)
+MODULES=(
+    "${SCRIPT_DIR}/scripts/modules/describe.sh"
+    "${SCRIPT_DIR}/scripts/modules/create.sh"
+    "${SCRIPT_DIR}/scripts/modules/delete.sh"
+    "exit"
+)
+
+# Текущий выбранный пункт (0 - первый)
+selected=0
+
+# Функция отрисовки меню
+draw_menu() {
+    tput clear
+    draw_logo
+    echo ""
+    echo "   ${YELLOW}Используйте стрелки ↑ ↓ для навигации, Enter для выбора${RESET}"
+    echo ""
+
+    for i in "${!MENU_ITEMS[@]}"; do
+        if [[ $i -eq $selected ]]; then
+            # Подсвеченный пункт (реверсивные цвета)
+            echo -n "   ${REV}${GREEN} ▶ ${MENU_ITEMS[$i]} ${RESET}"
+            # Добавим немного пробелов для ровности (опционально)
+            # Можно использовать printf для выравнивания, но не обязательно
+        else
+            echo -n "     ${MENU_ITEMS[$i]}"
+        fi
+        echo ""
     done
 }
 
-show_splash
-main_menu
+# Функция обработки нажатий
+handle_input() {
+    local key
+    # Читаем один символ
+    read -rsn1 key
+    if [[ $key == $'\x1b' ]]; then
+        # Если это escape-последовательность, читаем следующие два символа
+        read -rsn2 key
+        case "$key" in
+            '[A') # стрелка вверх
+                ((selected--))
+                if [[ $selected -lt 0 ]]; then
+                    selected=$((${#MENU_ITEMS[@]} - 1))
+                fi
+                ;;
+            '[B') # стрелка вниз
+                ((selected++))
+                if [[ $selected -ge ${#MENU_ITEMS[@]} ]]; then
+                    selected=0
+                fi
+                ;;
+        esac
+    elif [[ $key == "" ]]; then
+        # Enter (пустая строка)
+        return 0
+    elif [[ $key == "q" || $key == "Q" ]]; then
+        # Выход по q
+        selected=$((${#MENU_ITEMS[@]} - 1))
+        return 0
+    fi
+    return 1
+}
+
+# Главный цикл
+main_loop() {
+    while true; do
+        draw_menu
+        if handle_input; then
+            # Enter нажат
+            choice=$selected
+            if [[ ${MODULES[$choice]} == "exit" ]]; then
+                clear
+                echo "${GREEN}Спасибо за использование Kafka System Control!${RESET}"
+                echo "${YELLOW}«Movement – life!»${RESET}"
+                sleep 1
+                break
+            else
+                # Запускаем модуль
+                tput cnorm  # включаем курсор для дочерних скриптов
+                ${MODULES[$choice]}
+                tput civis  # снова выключаем
+            fi
+        fi
+    done
+}
+
+# Запуск
+main_loop
+restore_cursor
