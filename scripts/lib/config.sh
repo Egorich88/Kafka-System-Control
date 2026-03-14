@@ -1,5 +1,5 @@
 #!/bin/bash
-export VERSION="3.0"
+export VERSION="3.1"
 export ENV_NAME="WSL-DEV"
 # Путь к Kafka внутри WSL (абсолютный!)
 export KAFKA_HOME="/home/prorok/kafka"
