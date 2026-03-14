@@ -14,7 +14,7 @@ trap 'tput cnorm' EXIT INT TERM
 
 # --- Удаление топика ---
 delete_topic() {
-    draw_header "УДАЛЕНИЕ ТОПИКА" "❌ У Д А Л Е Н И Е  Т О П И К А" 10
+    draw_module_logo "УДАЛЕНИЕ ТОПИКА"   # <-- используем единый логотип
     echo ""
     local topic
     topic=$(read_input "Введите имя топика для удаления")
@@ -37,7 +37,7 @@ delete_topic() {
 
 # --- Удаление группы потребителей ---
 delete_consumer_group() {
-    draw_header "УДАЛЕНИЕ ГРУППЫ" "❌ У Д А Л Е Н И Е  Г Р У П П Ы" 10
+    draw_module_logo "УДАЛЕНИЕ ГРУППЫ"
     echo ""
     local group
     group=$(read_input "Введите имя группы потребителей для удаления")
@@ -60,7 +60,7 @@ delete_consumer_group() {
 
 # --- Удаление ACL для топика ---
 delete_acls_for_topic() {
-    draw_header "УДАЛЕНИЕ ACL ДЛЯ ТОПИКА" "❌ У Д А Л Е Н И Е  ACL" 10
+    draw_module_logo "УДАЛЕНИЕ ACL ДЛЯ ТОПИКА" "❌ У Д А Л Е Н И Е  ACL" 10
     echo ""
     local topic
     topic=$(read_input "Введите имя топика, для которого удалить все ACL")
@@ -83,7 +83,7 @@ delete_acls_for_topic() {
 
 # --- Удаление ACL для группы ---
 delete_acls_for_group() {
-    draw_header "УДАЛЕНИЕ ACL ДЛЯ ГРУППЫ" "❌ У Д А Л Е Н И Е  ACL" 10
+    draw_module_logo "УДАЛЕНИЕ ACL ДЛЯ ГРУППЫ" "❌ У Д А Л Е Н И Е  ACL" 10
     echo ""
     local group
     group=$(read_input "Введите имя группы, для которой удалить все ACL")
