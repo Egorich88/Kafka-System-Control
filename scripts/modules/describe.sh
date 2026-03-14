@@ -56,6 +56,133 @@ describe_all_groups() {
     pause
 }
 
+# ==================== Управление оффсетами ====================
+
+# Сброс оффсетов для группы (основная функция)
+reset_offsets() {
+    draw_module_logo "СБРОС ОФФСЕТОВ"
+    echo ""
+
+    local group
+    group=$(read_input "Введите имя группы потребителей")
+    [[ -z "$group" ]] && { show_error "Имя группы не может быть пустым"; pause; return; }
+
+    # Получаем список топиков, на которые подписана группа
+    show_info "Получение списка топиков для группы $group..."
+    local topics_output
+    topics_output=$(run_kafka_cmd "consumer-groups" "--describe --group $group" 2>&1)
+    if [[ $? -ne 0 ]]; then
+        show_error "Не удалось получить информацию о группе. Возможно, группа не существует."
+        pause
+        return
+    fi
+
+    # Парсим вывод, чтобы получить уникальные топики (упрощённо)
+    local topics=($(echo "$topics_output" | awk 'NR>2 {print $2}' | sort -u))
+    if [[ ${#topics[@]} -eq 0 ]]; then
+        show_error "Группа $group не имеет активных топиков или не найдена."
+        pause
+        return
+    fi
+
+    # Предлагаем выбрать топик
+    echo ""
+    echo "Доступные топики для группы $group:"
+    for i in "${!topics[@]}"; do
+        echo "$((i+1))) ${topics[$i]}"
+    done
+    echo "$((${#topics[@]}+1))) Все топики группы"
+    echo ""
+    local topic_choice
+    read -p "$(print_prompt 'Выберите топик [1-'${#topics[@]}'] или Enter для всех: ')" topic_choice
+
+    local selected_topics=()
+    if [[ -z "$topic_choice" || "$topic_choice" -eq $((${#topics[@]}+1)) ]]; then
+        selected_topics=("${topics[@]}")
+    else
+        local idx=$((topic_choice-1))
+        if [[ $idx -ge 0 && $idx -lt ${#topics[@]} ]]; then
+            selected_topics=("${topics[$idx]}")
+        else
+            show_error "Неверный выбор"
+            pause
+            return
+        fi
+    fi
+
+    # Выбор типа сброса
+    echo ""
+    echo "Типы сброса:"
+    echo "1) На самое начало (--to-earliest)"
+    echo "2) В самый конец (--to-latest)"
+    echo "3) Сдвиг на N сообщений (--shift-by)"
+    echo "4) На конкретную дату/время (--to-datetime)"
+    echo "5) На конкретный оффсет (--to-offset) [требуется партиция]"
+    echo ""
+    local reset_type
+    read -p "$(print_prompt 'Выберите тип сброса [1-5]') " reset_type
+
+    local reset_option=""
+    local extra_params=""
+
+    case $reset_type in
+        1) reset_option="--to-earliest" ;;
+        2) reset_option="--to-latest" ;;
+        3)
+            local shift
+            shift=$(read_input "Введите сдвиг (положительное или отрицательное число)")
+            [[ -z "$shift" ]] && { show_error "Сдвиг не может быть пустым"; pause; return; }
+            reset_option="--shift-by $shift"
+            ;;
+        4)
+            local datetime
+            datetime=$(read_input "Введите дату/время в формате YYYY-MM-DDTHH:MM:SS.sss (например, 2026-01-01T12:00:00.000)")
+            [[ -z "$datetime" ]] && { show_error "Дата не может быть пустой"; pause; return; }
+            reset_option="--to-datetime $datetime"
+            ;;
+        5)
+            local partition offset
+            partition=$(read_input "Введите номер партиции")
+            offset=$(read_input "Введите оффсет")
+            [[ -z "$partition" || -z "$offset" ]] && { show_error "Партиция и оффсет обязательны"; pause; return; }
+            reset_option="--to-offset $offset"
+            extra_params="--topic ${selected_topics[0]} --partition $partition"  # для одного топика и партиции
+            ;;
+        *)
+            show_error "Неверный выбор"
+            pause
+            return
+            ;;
+    esac
+
+    # Формируем общие параметры для команд
+    local common_params="--group $group"
+    for topic in "${selected_topics[@]}"; do
+        common_params="$common_params --topic $topic"
+    done
+
+    echo ""
+    show_warning "Перед выполнением сброса будет показан результат пробного запуска (--dry-run)."
+    if ! confirm_action "Показать предварительный результат?"; then
+        show_info "Операция отменена"
+        pause
+        return
+    fi
+
+    # Пробный запуск
+    show_info "Пробный запуск (--dry-run):"
+    run_kafka_cmd "consumer-groups" "--reset-offsets $reset_option $common_params $extra_params --dry-run"
+
+    echo ""
+    if confirm_action "Выполнить сброс оффсетов для выбранных топиков?"; then
+        run_kafka_cmd "consumer-groups" "--reset-offsets $reset_option $common_params $extra_params --execute"
+        log_action "INFO" "Выполнен сброс оффсетов для группы $group, тип $reset_option"
+    else
+        show_info "Операция отменена"
+    fi
+    pause
+}
+
 # ==================== ACL ====================
 
 list_acls() {
@@ -210,12 +337,13 @@ consumer_menu() {
         "🔍 Поиск группы"
         "📋 Список всех групп"
         "📊 Состояние всех групп"
+        "🔄 Управление оффсетами (сброс)"   # новый пункт
         "🔙 Назад"
     )
     local selected=0
 
     while true; do
-        draw_module_logo "ГРУППЫ"           # ← заменили draw_header
+        draw_module_logo "ГРУППЫ"
         echo ""
         echo "   ${YELLOW}Используйте стрелки ↑ ↓ для навигации, Enter для выбора${RESET}"
         echo ""
@@ -242,7 +370,8 @@ consumer_menu() {
                 0) describe_group ;;
                 1) list_consumer_groups ;;
                 2) describe_all_groups ;;
-                3) return ;;
+                3) reset_offsets ;;          # вызов новой функции
+                4) return ;;
             esac
         elif [[ $key == "q" || $key == "Q" ]]; then
             exit 0
