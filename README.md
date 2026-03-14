@@ -65,7 +65,7 @@
    2) ➕ Создание (create)
    3) 🗑️ Удаление (delete)
    4) 🚪 Выход
-<img width="331" height="248" alt="image" src="https://github.com/user-attachments/assets/09208c13-c378-4c48-b689-34b1ac6b5138" />
+![img.png](img.png)
 
 ---
 
@@ -77,7 +77,7 @@
 - Группы потребителей – поиск, список, состояние всех групп.
 
 - ACL – просмотр прав на топик или полного списка.
-<img width="353" height="259" alt="image" src="https://github.com/user-attachments/assets/787b964e-386d-4dad-9417-8c1569651217" />
+![img_2.png](img_2.png)
 
 ---
 
