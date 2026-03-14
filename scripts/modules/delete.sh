@@ -1,13 +1,16 @@
 #!/bin/bash
 
 # Модуль удаления ресурсов Kafka (топики, группы, ACL)
-# Версия 3.0 | Егор Хоменко (Egorich88)
+# Версия 3.1 | Егор Хоменко (Egorich88)
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/../lib/config.sh"
 source "${SCRIPT_DIR}/../lib/ui.sh"
 source "${SCRIPT_DIR}/../lib/kafka_commands.sh"
 source "${SCRIPT_DIR}/../lib/utils.sh"
+
+tput civis
+trap 'tput cnorm' EXIT INT TERM
 
 # --- Удаление топика ---
 delete_topic() {
@@ -103,28 +106,52 @@ delete_acls_for_group() {
 
 # --- Главное меню удаления ---
 main_delete() {
-    while true; do
-        draw_header "УДАЛЕНИЕ" "❌ У Д А Л Е Н И Е" 14
-        echo "1) 📁 Топик"
-        echo "2) 👥 Группа потребителей"
-        echo "3) 🔒 ACL для топика"
-        echo "4) 🔒 ACL для группы"
-        echo "5) 🔙 Назад в главное меню"
-        echo ""
-        read -p "$(print_prompt 'Выберите тип ресурса [1-5]') " choice
+    local options=(
+        "📁 Топик"
+        "👥 Группа потребителей"
+        "🔒 ACL для топика"
+        "🔒 ACL для группы"
+        "🔙 Назад в главное меню"
+    )
+    local selected=0
 
-        case $choice in
-            1) delete_topic ;;
-            2) delete_consumer_group ;;
-            3) delete_acls_for_topic ;;
-            4) delete_acls_for_group ;;
-            5) return ;;
-            *) echo "$(print_error 'Неверный выбор')"; sleep 1 ;;
-        esac
+    while true; do
+        draw_module_logo "УДАЛЕНИЕ"
+        echo ""
+        echo "   ${YELLOW}Используйте стрелки ↑ ↓ для навигации, Enter для выбора${RESET}"
+        echo ""
+
+        for i in "${!options[@]}"; do
+            if [[ $i -eq $selected ]]; then
+                echo -n "   ${REV}${GREEN} ▶ ${options[$i]} ${RESET}"
+            else
+                echo -n "     ${options[$i]}"
+            fi
+            echo ""
+        done
+
+        local key
+        read -rsn1 key
+        if [[ $key == $'\x1b' ]]; then
+            read -rsn2 key
+            case "$key" in
+                '[A') ((selected--)); [[ $selected -lt 0 ]] && selected=$((${#options[@]} - 1)) ;;
+                '[B') ((selected++)); [[ $selected -ge ${#options[@]} ]] && selected=0 ;;
+            esac
+        elif [[ $key == "" ]]; then
+            case $selected in
+                0) delete_topic ;;
+                1) delete_consumer_group ;;
+                2) delete_acls_for_topic ;;
+                3) delete_acls_for_group ;;
+                4) return ;;
+            esac
+        elif [[ $key == "q" || $key == "Q" ]]; then
+            exit 0
+        fi
     done
 }
 
-# Запуск, если скрипт вызван напрямую (не из main_menu)
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     main_delete
 fi

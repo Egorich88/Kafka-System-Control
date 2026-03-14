@@ -9,6 +9,10 @@ source "${SCRIPT_DIR}/../lib/ui.sh"
 source "${SCRIPT_DIR}/../lib/kafka_commands.sh"
 source "${SCRIPT_DIR}/../lib/utils.sh"
 
+# Отключаем курсор (будет включён при выходе)
+tput civis
+trap 'tput cnorm' EXIT INT TERM
+
 # ==================== Топики ====================
 
 describe_topics() {
@@ -95,7 +99,6 @@ search_by_key() {
     key=$(read_input "Введите ключ для поиска")
     [[ -z "$key" ]] && { show_error "Ключ обязателен"; pause; return; }
 
-    # Путь к JAR-файлу (относительно корня проекта)
     JAR_PATH="${SCRIPT_DIR}/../../java/lib/kafka-search.jar"
     if [[ ! -f "$JAR_PATH" ]]; then
         show_error "Java-утилита не найдена. Сначала выполните сборку: cd java && mvn package"
@@ -105,129 +108,239 @@ search_by_key() {
 
     show_info "Поиск сообщений с ключом '$key' в топике '$topic' (это может занять некоторое время)..."
     echo ""
-
-    # Запускаем Java-программу
     java -jar "$JAR_PATH" "$BOOTSTRAP_SERVERS" "$topic" "$key"
-
     pause
 }
 
+# ==================== Меню поиска ====================
 search_message_menu() {
+    local options=(
+        "📌 По оффсету"
+        "🔑 По ключу"
+        "🔙 Назад в меню топиков"
+    )
+    local selected=0
+
     while true; do
         draw_section_header "ПОИСК СООБЩЕНИЯ" "🔎 П О И С К  С О О Б Щ Е Н И Я" 11
         echo ""
-        echo "1) 📌 По оффсету"
-        echo "2) 🔑 По ключу"
-        echo "3) 🔙 Назад в меню топиков"
-        echo "4) 🔙 Назад в главное меню"
-        echo "5) 🚪 Выход"
+        echo "   ${YELLOW}Используйте стрелки ↑ ↓ для навигации, Enter для выбора${RESET}"
         echo ""
-        read -p "$(print_prompt 'Выберите действие [1-5]') " choice
 
-        case $choice in
-            1) search_by_offset ;;
-            2) search_by_key ;;
-            3) return ;;
-            4) describe_main_menu; break ;;
-            5) clear; exit 0 ;;
-            *) echo "$(print_error 'Неверный выбор')"; sleep 1 ;;
-        esac
+        for i in "${!options[@]}"; do
+            if [[ $i -eq $selected ]]; then
+                echo -n "   ${REV}${GREEN} ▶ ${options[$i]} ${RESET}"
+            else
+                echo -n "     ${options[$i]}"
+            fi
+            echo ""
+        done
+
+        local key
+        read -rsn1 key
+        if [[ $key == $'\x1b' ]]; then
+            read -rsn2 key
+            case "$key" in
+                '[A') ((selected--)); [[ $selected -lt 0 ]] && selected=$((${#options[@]} - 1)) ;;
+                '[B') ((selected++)); [[ $selected -ge ${#options[@]} ]] && selected=0 ;;
+            esac
+        elif [[ $key == "" ]]; then
+            case $selected in
+                0) search_by_offset ;;
+                1) search_by_key ;;
+                2) return ;;
+            esac
+        elif [[ $key == "q" || $key == "Q" ]]; then
+            exit 0
+        fi
     done
 }
 
 # ==================== Меню топиков ====================
-
 topic_menu() {
+    local options=(
+        "🔍 Поиск топика"
+        "⚙️ Конфигурация топика"
+        "📋 Список топиков"
+        "🔎 Поиск сообщения"
+        "🔙 Назад"
+    )
+    local selected=0
+
     while true; do
         draw_header "ТОПИКИ" "Т О П И К И" 15
         echo ""
-        echo "1) 🔍 Поиск топика"
-        echo "2) ⚙️ Конфигурация топика"
-        echo "3) 📋 Список топиков"
-        echo "4) 🔎 Поиск сообщения"
-        echo "5) 🔙 Назад"
+        echo "   ${YELLOW}Используйте стрелки ↑ ↓ для навигации, Enter для выбора${RESET}"
         echo ""
-        read -p "$(print_prompt 'Выберите действие [1-5]') " choice
 
-        case $choice in
-            1) describe_topic ;;
-            2) describe_topic_config ;;
-            3) describe_topics ;;
-            4) search_message_menu ;;
-            5) return ;;
-            *) echo "$(print_error 'Неверный выбор')"; sleep 1 ;;
-        esac
+        for i in "${!options[@]}"; do
+            if [[ $i -eq $selected ]]; then
+                echo -n "   ${REV}${GREEN} ▶ ${options[$i]} ${RESET}"
+            else
+                echo -n "     ${options[$i]}"
+            fi
+            echo ""
+        done
+
+        local key
+        read -rsn1 key
+        if [[ $key == $'\x1b' ]]; then
+            read -rsn2 key
+            case "$key" in
+                '[A') ((selected--)); [[ $selected -lt 0 ]] && selected=$((${#options[@]} - 1)) ;;
+                '[B') ((selected++)); [[ $selected -ge ${#options[@]} ]] && selected=0 ;;
+            esac
+        elif [[ $key == "" ]]; then
+            case $selected in
+                0) describe_topic ;;
+                1) describe_topic_config ;;
+                2) describe_topics ;;
+                3) search_message_menu ;;
+                4) return ;;
+            esac
+        elif [[ $key == "q" || $key == "Q" ]]; then
+            exit 0
+        fi
     done
 }
 
-# ==================== Меню групп потребителей ====================
-
+# ==================== Меню групп ====================
 consumer_menu() {
+    local options=(
+        "🔍 Поиск группы"
+        "📋 Список всех групп"
+        "📊 Состояние всех групп"
+        "🔙 Назад"
+    )
+    local selected=0
+
     while true; do
         draw_header "ГРУППЫ" "Г Р У П П Ы" 15
         echo ""
-        echo "1) 🔍 Поиск группы"
-        echo "2) 📋 Список всех групп"
-        echo "3) 📊 Состояние всех групп"
-        echo "4) 🔙 Назад"
+        echo "   ${YELLOW}Используйте стрелки ↑ ↓ для навигации, Enter для выбора${RESET}"
         echo ""
-        read -p "$(print_prompt 'Выберите действие [1-4]') " choice
 
-        case $choice in
-            1) describe_group ;;
-            2) list_consumer_groups ;;
-            3) describe_all_groups ;;
-            4) return ;;
-            *) echo "$(print_error 'Неверный выбор')"; sleep 1 ;;
-        esac
+        for i in "${!options[@]}"; do
+            if [[ $i -eq $selected ]]; then
+                echo -n "   ${REV}${GREEN} ▶ ${options[$i]} ${RESET}"
+            else
+                echo -n "     ${options[$i]}"
+            fi
+            echo ""
+        done
+
+        local key
+        read -rsn1 key
+        if [[ $key == $'\x1b' ]]; then
+            read -rsn2 key
+            case "$key" in
+                '[A') ((selected--)); [[ $selected -lt 0 ]] && selected=$((${#options[@]} - 1)) ;;
+                '[B') ((selected++)); [[ $selected -ge ${#options[@]} ]] && selected=0 ;;
+            esac
+        elif [[ $key == "" ]]; then
+            case $selected in
+                0) describe_group ;;
+                1) list_consumer_groups ;;
+                2) describe_all_groups ;;
+                3) return ;;
+            esac
+        elif [[ $key == "q" || $key == "Q" ]]; then
+            exit 0
+        fi
     done
 }
 
 # ==================== Меню ACL ====================
-
 acl_menu() {
+    local options=(
+        "🔍 Права на топик"
+        "📋 Полный список ACL"
+        "🔙 Назад"
+    )
+    local selected=0
+
     while true; do
         draw_header "ACL" "С П И С К И  Д О С Т У П А" 12
         echo ""
-        echo "1) 🔍 Права на топик"
-        echo "2) 📋 Полный список ACL"
-        echo "3) 🔙 Назад"
+        echo "   ${YELLOW}Используйте стрелки ↑ ↓ для навигации, Enter для выбора${RESET}"
         echo ""
-        read -p "$(print_prompt 'Выберите действие [1-3]') " choice
 
-        case $choice in
-            1) list_acls_for_topic ;;
-            2) list_acls ;;
-            3) return ;;
-            *) echo "$(print_error 'Неверный выбор')"; sleep 1 ;;
-        esac
+        for i in "${!options[@]}"; do
+            if [[ $i -eq $selected ]]; then
+                echo -n "   ${REV}${GREEN} ▶ ${options[$i]} ${RESET}"
+            else
+                echo -n "     ${options[$i]}"
+            fi
+            echo ""
+        done
+
+        local key
+        read -rsn1 key
+        if [[ $key == $'\x1b' ]]; then
+            read -rsn2 key
+            case "$key" in
+                '[A') ((selected--)); [[ $selected -lt 0 ]] && selected=$((${#options[@]} - 1)) ;;
+                '[B') ((selected++)); [[ $selected -ge ${#options[@]} ]] && selected=0 ;;
+            esac
+        elif [[ $key == "" ]]; then
+            case $selected in
+                0) list_acls_for_topic ;;
+                1) list_acls ;;
+                2) return ;;
+            esac
+        elif [[ $key == "q" || $key == "Q" ]]; then
+            exit 0
+        fi
     done
 }
 
 # ==================== Главное меню описания ====================
-
 describe_main_menu() {
-    while true; do
-        draw_header "ОПИСАНИЕ" "О П И С А Н И Е" 15
-        echo ""
-        echo "1) 📋 Топики"
-        echo "2) 👥 Группы потребителей"
-        echo "3) 🔐 ACL"
-        echo "4) 🔙 Назад в главное меню"
-        echo ""
-        read -p "$(print_prompt 'Выберите раздел [1-4]') " choice
+    local options=(
+        "📋 Топики"
+        "👥 Группы потребителей"
+        "🔐 ACL"
+        "🔙 Назад в главное меню"
+    )
+    local selected=0
 
-        case $choice in
-            1) topic_menu ;;
-            2) consumer_menu ;;
-            3) acl_menu ;;
-            4) return ;;
-            *) echo "$(print_error 'Неверный выбор')"; sleep 1 ;;
-        esac
+    while true; do
+        draw_module_logo "ОПИСАНИЕ"   # <-- здесь используем новый логотип
+        echo ""
+        echo "   ${YELLOW}Используйте стрелки ↑ ↓ для навигации, Enter для выбора${RESET}"
+        echo ""
+
+        for i in "${!options[@]}"; do
+            if [[ $i -eq $selected ]]; then
+                echo -n "   ${REV}${GREEN} ▶ ${options[$i]} ${RESET}"
+            else
+                echo -n "     ${options[$i]}"
+            fi
+            echo ""
+        done
+
+        local key
+        read -rsn1 key
+        if [[ $key == $'\x1b' ]]; then
+            read -rsn2 key
+            case "$key" in
+                '[A') ((selected--)); [[ $selected -lt 0 ]] && selected=$((${#options[@]} - 1)) ;;
+                '[B') ((selected++)); [[ $selected -ge ${#options[@]} ]] && selected=0 ;;
+            esac
+        elif [[ $key == "" ]]; then
+            case $selected in
+                0) topic_menu ;;
+                1) consumer_menu ;;
+                2) acl_menu ;;
+                3) return ;;
+            esac
+        elif [[ $key == "q" || $key == "Q" ]]; then
+            exit 0
+        fi
     done
 }
 
-# Запуск, если скрипт вызван напрямую
+# Запуск, если скрипт вызван напрямую (не из main_menu)
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     describe_main_menu
 fi
