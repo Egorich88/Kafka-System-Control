@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  kafka-control-backend:
+    build: ./backend
+    container_name: kafka-control-backend
+    ports:
+      - "8081:8080"
+    volumes:
+      # Монтируем всю папку Kafka из WSL (путь должен быть правильным для вашей системы)
+      - /home/prorok/kafka:/opt/kafka
+    environment:
+      - KAFKA_HOME=/opt/kafka
+      - PATH=/opt/kafka/bin:${PATH}
+      # Используем переменную из .env, которая будет подставлена автоматически
+      - KAFKA_BOOTSTRAP_SERVERS=${KAFKA_BOOTSTRAP_SERVERS}
+    restart: unless-stopped
