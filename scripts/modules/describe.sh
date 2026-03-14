@@ -122,7 +122,7 @@ search_message_menu() {
     local selected=0
 
     while true; do
-        draw_section_header "ПОИСК СООБЩЕНИЯ" "🔎 П О И С К  С О О Б Щ Е Н И Я" 11
+        draw_module_logo "ПОИСК СООБЩЕНИЙ"   # ← заменили draw_section_header
         echo ""
         echo "   ${YELLOW}Используйте стрелки ↑ ↓ для навигации, Enter для выбора${RESET}"
         echo ""
@@ -168,7 +168,7 @@ topic_menu() {
     local selected=0
 
     while true; do
-        draw_header "ТОПИКИ" "Т О П И К И" 15
+        draw_module_logo "ТОПИКИ"           # ← заменили draw_header
         echo ""
         echo "   ${YELLOW}Используйте стрелки ↑ ↓ для навигации, Enter для выбора${RESET}"
         echo ""
@@ -215,7 +215,7 @@ consumer_menu() {
     local selected=0
 
     while true; do
-        draw_header "ГРУППЫ" "Г Р У П П Ы" 15
+        draw_module_logo "ГРУППЫ"           # ← заменили draw_header
         echo ""
         echo "   ${YELLOW}Используйте стрелки ↑ ↓ для навигации, Enter для выбора${RESET}"
         echo ""
@@ -260,7 +260,7 @@ acl_menu() {
     local selected=0
 
     while true; do
-        draw_header "ACL" "С П И С К И  Д О С Т У П А" 12
+        draw_module_logo "ACL"               # ← заменили draw_header
         echo ""
         echo "   ${YELLOW}Используйте стрелки ↑ ↓ для навигации, Enter для выбора${RESET}"
         echo ""

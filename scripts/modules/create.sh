@@ -14,8 +14,9 @@ trap 'tput cnorm' EXIT INT TERM
 
 # --- Создание топика ---
 create_topic() {
-    draw_header "СОЗДАНИЕ ТОПИКА" "➕ Н О В Ы Й  Т О П И К" 10
+    draw_module_logo "СОЗДАНИЕ ТОПИКА"   # <-- используем единый логотип
     echo ""
+
     local topic partitions replication configs
 
     topic=$(read_input "Введите имя топика")
@@ -24,16 +25,19 @@ create_topic() {
     partitions=$(read_input "Количество партиций" "1")
     replication=$(read_input "Фактор репликации" "1")
 
+    # Проверка, что фактор репликации не больше числа брокеров
     if [[ "$replication" -gt 1 ]]; then
         show_warning "У вас только один брокер, фактор репликации будет принудительно установлен в 1"
         replication=1
     fi
 
+    # Дополнительные конфигурации (опционально)
     echo ""
     show_info "Вы можете указать дополнительные конфигурации в формате key=value (например, retention.ms=604800000)"
     show_info "Для пропуска оставьте пустым"
     extra_configs=$(read_input "Дополнительные конфигурации (через запятую)")
 
+    # Формируем команду
     local cmd_params="--create --topic $topic --partitions $partitions --replication-factor $replication"
     if [[ -n "$extra_configs" ]]; then
         IFS=',' read -ra configs_array <<< "$extra_configs"
@@ -54,9 +58,9 @@ create_topic() {
 
 # --- Создание группы потребителей (информация) ---
 create_consumer_group() {
-    draw_header "СОЗДАНИЕ ГРУППЫ" "➕ Н О В А Я  Г Р У П П А" 10
+    draw_module_logo "СОЗДАНИЕ ГРУППЫ"
     echo ""
-    show_warning "Группы потребителей обычно создаются автоматически при первом подключении."
+    show_warning "Группы потребителей обычно создаются автоматически..."
     show_info "Если вам нужно создать группу с определёнными параметрами, используйте:"
     show_info "kafka-consumer-groups.sh --bootstrap-server ... --group ... --reset-offsets ..."
     echo ""
@@ -66,7 +70,7 @@ create_consumer_group() {
 
 # --- Создание ACL ---
 create_acl() {
-    draw_header "СОЗДАНИЕ ACL" "➕ Н О В О Е  П Р А В И Л О" 10
+    draw_module_logo "СОЗДАНИЕ ACL"
     echo ""
 
     local perm_type
