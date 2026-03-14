@@ -97,8 +97,13 @@
    - Операции (Read, Write, Create, Delete, Alter, Describe, ClusterAction, All)
 
 - Группа потребителей – пока информационная заглушка.
-<img width="346" height="249" alt="image" src="https://github.com/user-attachments/assets/f0e09abc-0a7e-4970-affa-89f637d755e6" />
-<img width="947" height="468" alt="image" src="https://github.com/user-attachments/assets/55866b02-fc3b-4c5e-9164-2e576ae044a3" />
+
+![img_3.png](img_3.png)
+
+Создаем топик:
+
+![img_4.png](img_4.png)
+
 
 ---
 
@@ -114,6 +119,8 @@
 - ACL для группы – удаление всех правил ACL, связанных с указанной группой потребителей.
 
 Все операции требуют подтверждения для предотвращения случайных удалений.
+
+![img_5.png](img_5.png)
 
 ---
 
