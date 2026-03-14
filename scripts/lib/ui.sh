@@ -113,13 +113,31 @@ draw_module_logo() {
     echo "   ║         ██║  ██╗██║  ██║██║     ██║  ██╗██║  ██║        ║"
     echo "   ║         ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝        ║"
     echo "   ║  ╔═══════════════════════════════════════════════════╗  ║"
-    # Центрируем название модуля (ширина внутренней части 45 символов)
+
+    # Ширина внутренней области (между двойными рамками) = 45 символов
     local inner_width=45
     local text=" $title "
     local text_len=${#text}
-    local pad=$(( (inner_width - text_len) / 2 ))
-    printf "   ║  ║%*s%*s%*s║  ║\n" $pad "" $text_len "$text" $((inner_width - pad - text_len)) ""
-    echo "   ║  ╚═══════════════════════════════════════════════════╝  ║"
+
+    if (( text_len > inner_width )); then
+        # Если текст слишком длинный – обрезаем (на всякий случай)
+        text="${text:0:inner_width}"
+        text_len=$inner_width
+    fi
+
+    # Вычисляем отступы слева и справа для центрирования
+    local left_pad=$(( (inner_width - text_len) / 2 ))
+    local right_pad=$(( inner_width - text_len - left_pad ))
+
+    # Выводим строку с названием
+    printf "   ║  ║%*s%s%*s║  ║\n" $left_pad "" "$text" $right_pad ""
+
+    # Нижняя граница внутренней рамки (генерируем ровно inner_width символов ═)
+    printf "   ║  ╚"
+    printf "%0.s═" $(seq 1 $inner_width)
+    printf "╝  ║\n"
+
+    # Завершающие строки внешней рамки
     echo "   ║            версия ${VERSION}       ::Egorich88::               ║"
     echo "   ╚═════════════════════════════════════════════════════════╝"
     echo "${RESET}"
